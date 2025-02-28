@@ -2,29 +2,38 @@
 
 function Usuarios() {
 
-    const [dataSource, setDataSource] = useState([]);
-    useEffect(listarUsuarios, [])
+  const [dataSource, setDataSource] = useState([]);
+  useEffect(listarUsuarios, []);
+  const history = useHistory();
 
-    function listarUsuarios() {
+
+  function listarUsuarios() {
     google.script.run
       .withSuccessHandler(res => {
         const usuarios = JSON.parse(res);
         let arreglo = [];
 
         usuarios.map(usuario => {
-            arreglo.push({
-              key: usuario.id,
-              ...usuario,
-
-            })
+          arreglo.push({
+            key: usuario.id,
+            ...usuario,
+            acciones:
+              <Button
+                onClick={() => {
+                  history.push("/formularioRegistro/" + usuario.id);
+                }}>
+                Editar
+              </Button>
+          })
         })
 
         setDataSource(arreglo);
 
-    }).listarUsuarios();
-}
+      }).listarUsuarios();
+  }
 
-const columns = [
+
+  const columns = [
     {
       title: 'Nombre completo',
       dataIndex: 'nombreCompleto',
@@ -40,15 +49,19 @@ const columns = [
       dataIndex: 'contrasenia',
       key: 'contrasenia',
     },
+    {
+      title: 'Acciones',
+      dataIndex: 'acciones',
+      key: 'acciones',
+    },
+ 
+  ];
 
-];
 
-    return (
-        <Table dataSource={dataSource} columns={columns} />
-    )
+
+  return (
+    <Table dataSource={dataSource} columns={columns} />
+  )
 }
-
-
-
 
 //</script>
